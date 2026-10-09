@@ -7,7 +7,7 @@ import {
   ShieldCheck, Package, ScanLine, LogOut, Plus, AlertTriangle, CheckCircle2,
   Truck, Factory, ClipboardCheck, ArrowRightLeft, Sparkles, Copy, Check,
   QrCode, Search, Filter, ShieldAlert, ArrowRight, ExternalLink, RefreshCw,
-  Hash, Layers, Clock, MapPin, User, Tag, Lock, ChevronRight, X, Eye
+  Hash, Layers, Clock, MapPin, User, Tag, Lock, ChevronRight, X, Eye, Mail
 } from 'lucide-react';
 
 // --- Dynamic Color System Helpers ---
@@ -702,6 +702,8 @@ function Product() {
   const [data, setData] = useState(null);
   const [qr, setQr] = useState(null);
   const [toastMsg, setToastMsg] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [emailSending, setEmailSending] = useState(false);
   const [f, setF] = useState({ eventType: 'manufacturing', details: '', location: '', actorName: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -733,6 +735,19 @@ function Product() {
       .catch((e) => setError(message(e)));
   };
 
+  const emailPassportSummary = async () => {
+    setEmailError('');
+    setEmailSending(true);
+    try {
+      const { data: result } = await api.post(`/agent/email-passport/${id}`);
+      setToastMsg(`Passport summary emailed to ${result.recipientEmail}.`);
+    } catch (e) {
+      setEmailError(message(e));
+    } finally {
+      setEmailSending(false);
+    }
+  };
+
   const copyLink = (text) => {
     navigator.clipboard.writeText(text);
     setToastMsg('Link copied to clipboard!');
@@ -756,18 +771,34 @@ function Product() {
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <Toast msg={toastMsg} onClose={() => setToastMsg('')} />
 
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <Link className="inline-flex items-center gap-2 text-xs font-bold text-teal-400 hover:text-teal-300" to="/dashboard">
           ← Back to Passports
         </Link>
-        <Link
-          to={`/verify/${product.passport_id}`}
-          target="_blank"
-          className="btn-secondary text-xs"
-        >
-          <ExternalLink size={14} /> View Public Passport Page
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={emailPassportSummary}
+            disabled={emailSending}
+            className="btn-secondary text-xs disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <Mail size={14} /> {emailSending ? 'Sending summary...' : 'Email me this summary'}
+          </button>
+          <Link
+            to={`/verify/${product.passport_id}`}
+            target="_blank"
+            className="btn-secondary text-xs"
+          >
+            <ExternalLink size={14} /> View Public Passport Page
+          </Link>
+        </div>
       </div>
+
+      {emailError && (
+        <div role="alert" className="mb-5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+          {emailError}
+        </div>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-[1.4fr_.6fr]">
         {/* Main Product Info & History */}
