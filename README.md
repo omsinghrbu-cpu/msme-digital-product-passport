@@ -56,6 +56,6 @@ The seed product can be checked publicly at `http://localhost:5173/verify/DPP-GW
 
 For deployment, use Vercel (client) plus Render/Railway/free Supabase Postgres if desired. Set `VITE_API_URL` to the hosted server URL.
 
-## Integrity model (easy to explain in viva)
+## Integrity model 
 
 For each event, the API calculates `SHA256(previousHash + canonicalEventData)`. The next record points to it. During verification, the server recomputes every hash and checks the links. Editing a stored event breaks its own hash or the link to the next record. Application users cannot edit or delete lifecycle events through the API.
