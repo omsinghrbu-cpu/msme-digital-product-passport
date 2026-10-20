@@ -78,4 +78,4 @@ For deployment, use Vercel (client) plus Render/Railway/free Supabase Postgres i
 
 ## Integrity model 
 
-For each event, the API calculates `SHA256(previousHash + canonicalEventData)`. The next record points to it. During verification, the server recomputes every hash and checks the links. Editing a stored event breaks its own hash or the link to the next record. Application users cannot edit or delete lifecycle events through the API.
+For each event, the API calculates `SHA256(previousHash + canonicalEventData)`. The next record points to it. During verification, the server recomputes every hash and checks the links. Editing a stored event breaks its own hash or the link to the next record. Application users cannot edit or delete lifecycle events through the API
