@@ -1927,6 +1927,22 @@ function Verify() {
     }
   };
 
+  const handleVisualizerNodeClick = (milestone) => {
+    setActiveVisualizerNode(milestone.id);
+
+    if (milestone.event?.id || milestone.event?.sequence_no) {
+      const targetId = `verify-event-${milestone.event.sequence_no}`;
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setSpotlightId(milestone.event.sequence_no);
+        setToastMsg(`Spotlighted Block #${milestone.event.sequence_no} (${milestone.label})!`);
+        setTimeout(() => setSpotlightId(null), 3000);
+        return;
+      }
+    }
+  };
+
   if (loading) {
     return (
       <main className="py-28 text-center flex flex-col items-center justify-center gap-3">
