@@ -10,6 +10,7 @@ A Semester V IDEA Lab MVP for low-cost product traceability. Each product has a 
 - Immutable-style event records: every event stores `previous_hash` + `current_hash`
 - Public, no-login passport verification page
 - Admin integrity scan and audit log
+- CrewAI-generated product passport summary emails to the signed-in user's registered address
 
 ## Quick start (Windows / PowerShell)
 
@@ -20,6 +21,24 @@ A Semester V IDEA Lab MVP for low-cost product traceability. Each product has a 
 5. Run `npm --prefix server run migrate`, then `npm run seed`.
 6. Start both apps with `npm run dev`.
 7. Open `http://localhost:5173`.
+
+### CrewAI email agent setup
+
+1. Copy `agent/.env.example` to `agent/.env`. Set your `GEMINI_API_KEY` from [Google AI Studio](https://aistudio.google.com/apikey), SMTP settings, and a strong `AGENT_API_KEY`.
+2. Copy the same value used for `AGENT_API_KEY` into `AGENT_SERVICE_API_KEY` in `server/.env`. Set `AGENT_SERVICE_URL=http://127.0.0.1:8000`.
+3. In a second PowerShell terminal, start the Python agent:
+
+   ```powershell
+   cd agent
+   py -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   pip install -r requirements.txt
+   uvicorn main:app --host 127.0.0.1 --port 8000
+   ```
+
+4. Open a product while signed in and select **Email me this summary**. The API uses the signed-in account's email stored in the database; the browser cannot choose a recipient.
+
+The CrewAI agent uses Gemini (`gemini/gemini-3.6-flash` by default) to write a factual summary from the product's stored passport and lifecycle records. Those passport and event details are sent to the configured Gemini model for summary generation. SMTP sends the result as plain text. Gemini and SMTP credentials stay in `agent/.env` and are never sent to the browser. If the agent or email provider is unavailable, the API returns an error rather than reporting a successful send.
 
 Demo users (password: `Demo@123`):
 
@@ -41,6 +60,7 @@ The seed product can be checked publicly at `http://localhost:5173/verify/DPP-GW
 | GET | `/api/products/:id` | Product + events |
 | POST | `/api/products/:id/events` | Append lifecycle event |
 | GET | `/api/products/:id/qr` | QR PNG data URL |
+| POST | `/api/agent/email-passport/:id` | Email the signed-in user's passport summary |
 | GET | `/api/verify/:passportId` | Public passport and integrity result |
 | GET | `/api/admin/integrity-check` | Scan all passports (admin) |
 | GET | `/api/admin/audit-logs` | Audit history (admin) |
@@ -58,4 +78,4 @@ For deployment, use Vercel (client) plus Render/Railway/free Supabase Postgres i
 
 ## Integrity model 
 
-For each event, the API calculates `SHA256(previousHash + canonicalEventData)`. The next record points to it. During verification, the server recomputes every hash and checks the links. Editing a stored event breaks its own hash or the link to the next record. Application users cannot edit or delete lifecycle events through the API.
+For each event, the API calculates `SHA256(previousHash + canonicalEventData)`. The next record points to it. During verification, the server recomputes every hash and checks the links. Editing a stored event breaks its own hash or the link to the next record. Application users cannot edit or delete lifecycle events through the API
