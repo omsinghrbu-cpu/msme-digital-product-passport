@@ -1,8 +1,12 @@
 node_modules/
 .env
+.env*
 *.env
-server/.env
-client/.env
+server/.env*
+client/.env*
+.vercel
+client/.vercel
+server/.vercel
 dist/
 coverage/
 .dpp_data/
@@ -11,3 +15,4 @@ agent/.venv/
 agent/__pycache__/
 *.log
 .DS_Store
+

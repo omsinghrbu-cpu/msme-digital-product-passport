@@ -1,6 +1,5 @@
 import pg from 'pg';
 import 'dotenv/config';
-import { PGlite } from '@electric-sql/pglite';
 import { readFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,6 +23,7 @@ try {
   console.log('Connected to PostgreSQL (Supabase) database.');
 } catch (err) {
   console.log('PostgreSQL host not available (' + err.message + '). Using embedded PGlite database...');
+  const { PGlite } = await import('@electric-sql/pglite');
   const dbPath = path.join(__dirname, '../../.dpp_data');
   pgliteDb = new PGlite(dbPath);
 
