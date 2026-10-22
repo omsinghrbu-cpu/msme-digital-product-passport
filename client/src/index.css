@@ -3,65 +3,236 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-slate-950 text-slate-100 antialiased font-sans selection:bg-teal-500/30 selection:text-teal-200 min-h-screen;
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
   }
+
+  body {
+    @apply bg-[#070b14] text-slate-100 antialiased font-sans selection:bg-emerald-500/30 selection:text-emerald-200 min-h-screen;
+    background-color: #070b14;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 50% -20%, rgba(16, 185, 129, 0.16), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 90% 15%, rgba(6, 182, 212, 0.12), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 10% 85%, rgba(99, 102, 241, 0.08), transparent 60%),
+      linear-gradient(180deg, #070b14 0%, #0b1120 100%);
+    background-attachment: fixed;
+  }
+
   button {
     @apply transition-all duration-200 active:scale-[0.98];
   }
+
   input, textarea, select {
-    @apply rounded-xl border border-slate-700/80 bg-slate-900/90 px-3.5 py-2.5 text-slate-100 placeholder-slate-500 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all;
+    @apply rounded-xl border border-slate-700/80 bg-slate-900/90 px-3.5 py-2.5 text-slate-100 placeholder-slate-500 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200 shadow-inner;
   }
 }
 
 @layer components {
+  .bg-grid {
+    background-size: 32px 32px;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  }
+
   .glass-panel {
-    @apply rounded-2xl bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 shadow-xl shadow-black/40;
+    @apply rounded-2xl bg-slate-900/80 border border-slate-800/90 backdrop-blur-xl shadow-card;
   }
+
   .glass-card {
-    @apply rounded-2xl bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 shadow-lg shadow-black/30 hover:border-slate-700/80 transition-all duration-300;
+    @apply rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md p-6 hover:border-emerald-500/40 hover:bg-slate-900/90 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300;
   }
+
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none;
   }
+
   .btn-primary {
-    @apply btn bg-gradient-to-r from-teal-500 to-cyan-500 text-slate-950 hover:from-teal-400 hover:to-cyan-400 shadow-lg shadow-teal-500/20 hover:shadow-teal-500/30 font-bold;
+    @apply btn relative overflow-hidden bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-slate-950 hover:from-emerald-400 hover:to-teal-400 font-bold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 active:scale-[0.98];
   }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.3) 50%, transparent 80%);
+    transform: translateX(-150%);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-primary:hover::after {
+    transform: translateX(150%);
+  }
+
   .btn-secondary {
-    @apply btn bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 border border-slate-700/60 hover:border-slate-600;
+    @apply btn bg-slate-800/80 text-slate-200 hover:text-white hover:bg-slate-700/80 border border-slate-700 hover:border-slate-600 shadow-sm active:scale-[0.98];
   }
+
   .btn-ghost {
-    @apply btn bg-transparent text-slate-400 hover:text-slate-100 hover:bg-slate-800/50;
+    @apply btn bg-transparent text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 active:scale-[0.98];
   }
+
+  .btn-glow {
+    @apply btn relative bg-slate-900 border border-emerald-500/40 text-emerald-300 hover:border-emerald-400 hover:text-emerald-200 shadow-glow;
+  }
+
   .label {
     @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400;
   }
+
   .tag {
-    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider backdrop-blur-md border;
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider border shadow-sm;
+  }
+
+  .hash-chip {
+    @apply flex items-center justify-between rounded-xl bg-slate-950/90 px-3 py-2 border border-slate-800/90 font-mono text-xs shadow-inner hover:border-slate-700 transition-colors;
+  }
+
+  .mesh-orb {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(90px);
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .timeline-rail {
+    position: relative;
+  }
+
+  .timeline-rail::before {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: linear-gradient(180deg, #10b981 0%, #06b6d4 50%, rgba(30, 41, 59, 0.5) 100%);
+    border-radius: 9999px;
   }
 }
 
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(0.99); }
+/* Animations */
+.animate-laser {
+  animation: laserScan 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 4s ease-in-out infinite;
+@keyframes laserScan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
-/* Custom Scrollbar */
+/* Energy Beam Horizontal Connector Animation */
+@keyframes energyBeam {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-energy-beam {
+  background: linear-gradient(90deg, #059669 0%, #10b981 25%, #34d399 50%, #06b6d4 75%, #059669 100%);
+  background-size: 200% 100%;
+  animation: energyBeam 2.2s linear infinite;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+/* Flowing Dashed Line Animation */
+@keyframes dashFlow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animate-dash-flow {
+  stroke-dasharray: 6 6;
+  animation: dashFlow 1.2s linear infinite;
+}
+
+/* Glowing Beacon Node Pulse */
+@keyframes beaconPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5), 0 0 15px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0), 0 0 25px rgba(16, 185, 129, 0.6);
+  }
+}
+
+.animate-beacon-pulse {
+  animation: beaconPulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Spotlight Highlight Pulse for Timeline Events */
+@keyframes spotlightFlash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.9), 0 0 35px rgba(16, 185, 129, 0.7);
+    border-color: #10b981;
+    transform: scale(1.02);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.4), 0 0 45px rgba(6, 182, 212, 0.6);
+    border-color: #34d399;
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0), 0 0 15px rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+    transform: scale(1);
+  }
+}
+
+.spotlight-active {
+  animation: spotlightFlash 2.5s ease-in-out;
+  border-color: rgba(16, 185, 129, 0.9) !important;
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.stagger-children > * {
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0.03s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.13s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.18s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.23s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.28s; }
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: #090d16;
 }
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
-  border-radius: 4px;
+  border-radius: 9999px;
+  border: 1px solid #334155;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
