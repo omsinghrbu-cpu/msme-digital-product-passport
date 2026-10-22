@@ -17,13 +17,13 @@ const postgresUrl = process.env.DATABASE_URL || 'postgresql://postgres:postgres@
 try {
   const tempPool = new pg.Pool({
     connectionString: postgresUrl,
-    connectionTimeoutMillis: 1500,
+    connectionTimeoutMillis: 10000,
   });
   await tempPool.query('SELECT 1');
   realPool = tempPool;
-  console.log('Connected to PostgreSQL database.');
-} catch {
-  console.log('PostgreSQL host not available. Using embedded PGlite database...');
+  console.log('Connected to PostgreSQL (Supabase) database.');
+} catch (err) {
+  console.log('PostgreSQL host not available (' + err.message + '). Using embedded PGlite database...');
   const dbPath = path.join(__dirname, '../../.dpp_data');
   pgliteDb = new PGlite(dbPath);
 
